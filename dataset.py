@@ -117,7 +117,7 @@ def make_dataloaders(path, config, num_workers=2, shuffle=True, limit=None):
                         num_workers=num_workers,
                         pin_memory=config["pin_memory"],
                         persistent_workers=True,
-                        shuffle=shuffle)
+                        shuffle=False)
     return train_dl, val_dl
 
 

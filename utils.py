@@ -97,17 +97,34 @@ def cat_lab(L, ab):
     return (torch.cat((L, ab), dim=1))
 
 
+# def lab_to_rgb(L, ab):
+#     """
+#     Converts a batch of torch tensors from Lab to RGB
+#     """
+#     L = (L + 1.) * 50.
+#     ab = ab * 110.
+#     Lab = torch.cat([L, ab], dim=1).permute(0, 2, 3, 1).cpu().numpy()
+#     rgb_imgs = []
+#     for img in Lab:
+#         img_rgb = lab2rgb(img)
+#         rgb_imgs.append(img_rgb)
+#     return np.stack(rgb_imgs, axis=0)
 def lab_to_rgb(L, ab):
-    """
-    Converts a batch of torch tensors from Lab to RGB
-    """
-    L = (L + 1.) * 50.
-    ab = ab * 110.
+    if torch.isnan(L).any() or torch.isnan(ab).any():
+        print("Warning: NaN values detected in LAB tensor")
+        L = torch.nan_to_num(L, nan=0.0)
+        ab = torch.nan_to_num(ab, nan=0.0)
+    L = torch.clamp((L + 1.) * 50., 0, 100)  # Denormalize and clamp L to [0, 100]
+    ab = torch.clamp(ab * 110., -128, 128)  # Denormalize and clamp AB to [-128, 128]
     Lab = torch.cat([L, ab], dim=1).permute(0, 2, 3, 1).cpu().numpy()
     rgb_imgs = []
     for img in Lab:
-        img_rgb = lab2rgb(img)
-        rgb_imgs.append(img_rgb)
+        try:
+            img_rgb = lab2rgb(img)
+            rgb_imgs.append(img_rgb)
+        except ValueError as e:
+            print(f"Error in lab2rgb: {e}")
+            rgb_imgs.append(np.zeros_like(img))  # Fallback to black image
     return np.stack(rgb_imgs, axis=0)
 
 
