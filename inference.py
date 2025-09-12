@@ -26,7 +26,7 @@ def sanitize_config(config):
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-i", "--image-path", required=True, dest="img_path")
-    parser.add_argument("-T", "--diffusion-steps", default=350, dest="T")
+    parser.add_argument("-T", "--diffusion-steps", default=1000, dest="T")
     parser.add_argument("--image-size", default=64, dest="img_size", type=int)
     parser.add_argument("--checkpoint", required=True, dest="ckpt", help="Path to checkpoint")
     parser.add_argument("--show", default=True)

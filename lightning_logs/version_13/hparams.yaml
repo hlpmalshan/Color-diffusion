@@ -1,0 +1,17 @@
+loss_fn: l2
+T: 1000
+lr: 0.0001
+batch_size: 36
+sample: true
+should_log: true
+using_cond: true
+display_every: 350
+dynamic_threshold: true
+use_ema: true
+device: cuda:1
+pin_memory: true
+accumulate_grad_batches: 2
+img_size: 64
+epochs: 50
+train_autoenc: false
+enc_loss_coeff: 1.1
